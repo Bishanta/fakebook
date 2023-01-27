@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Formik, Form, Field } from "formik";
 import * as Yup from 'yup';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { addDoc, collection, serverTimestamp } from "firebase/firestore"
 import { db, auth, storage } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -22,6 +22,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
         padding: theme.spacing(1),
     },
 }));
+
+const DropzoneComponent = (component) => {
+    return (component).default ?? component
+}
 
 function BootstrapDialogTitle(props) {
     const { children, onClose, ...other } = props;
@@ -61,6 +65,8 @@ export default function PostForm({ open, setOpen }) {
     }
 
     const postsRef = collection(db, "posts")
+
+    const DropzoneFix = DropzoneComponent(Dropzone)
 
     const formRef = useRef()
     const [selectData, setSelectData] = useState('')
@@ -169,7 +175,7 @@ export default function PostForm({ open, setOpen }) {
                                     <Field as={TextareaAutosize} minRows={12} style={{ padding: 10 }} name="description" placeholder="Enter Content..." />
                                 </FormControl>}
                                 {selectData === 'image' &&
-                                    <Dropzone
+                                    <DropzoneFix
                                         maxFiles={1}
                                         onChangeStatus={(status) => onStatusChange(status)}
                                         multiple={false}
