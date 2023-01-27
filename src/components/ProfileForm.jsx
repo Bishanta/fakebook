@@ -22,6 +22,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
+const DropzoneComponent = (component) => {
+    return (component).default ?? component
+}
+
 function BootstrapDialogTitle(props) {
     const { children, onClose, ...other } = props;
 
@@ -57,6 +61,9 @@ export default function ProfileForm({ open, setOpen }) {
     const formRef = useRef()
     const [user] = useAuthState(auth)
     const [file, setFile] = useState([])
+
+    const DropzoneFix = DropzoneComponent(Dropzone)
+
 
     const validationSchema = Yup.object().shape({
         displayName: Yup.string()
@@ -157,7 +164,7 @@ export default function ProfileForm({ open, setOpen }) {
                                         <Typography sx={{ color: 'red' }}>{errors.displayName}</Typography>
                                     ) : null}
                                 </Box>
-                                <Dropzone
+                                <DropzoneFix
                                     maxFiles={1}
                                     onChangeStatus={(status) => onStatusChange(status)}
                                     multiple={false}
